@@ -1,7 +1,8 @@
 Changes
 MANIFEST
 Makefile.PL
-Proplog.pm
+thoughts.pod
+lib/AI/Proplog.pm
 t/bottom_up.t
 t/top_down.t
 

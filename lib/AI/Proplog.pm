@@ -10,7 +10,7 @@ our @ISA = qw(Exporter);
 
 our $debug = 0;
 
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
 
 
@@ -177,12 +177,15 @@ AI::Proplog - Propositional logic engine
  # basic cs requirements have been met
  my $R = $p->bottom_up('basic_cs');
 # or:  my $R = $p->top_down('basic_cs');
- ok($R);
+ print "The basic cs requirements have";
+ print $R ? : ' not'
+ print " been met\n";   
 
 =head1 DESCRIPTION
 
-This module is a prelude to more powerful modules supporting predicate
-and functional logic semantics with Perl syntax. The search algorithms
+This module allows one to assert propositions and rules based on
+propositions and then test new hypotheses based on the "universe" of
+existing propositions and rules. The implemented search algorithms
 are naive, inefficient and not-foolproof. For example the top-down
 engine will run without termination on the following code:
 
@@ -217,6 +220,34 @@ of interest. However, C<top_down()> does do backtracking, while
 C<bottom_up()> simply plows through your fact/rule base one time
 finding every truth it can, and then testing your queried
 proposition. 
+
+=head2 API
+
+=over 4
+
+=item * C<a($then, @if)>
+
+This function is used to model the human "if-then." It takes a list as
+its arguments. The first argument is the "then" and the remaining
+arguments are the "if", meaning the things which must be satisfied for
+the "then" to be true. Note: if there is no C<@if>, then C<$then> is
+true unconditionally. In other words, calling C<a> with one argument
+asserts that argument to be true.
+
+=item * C<apl(@true)>
+
+This function is used to state a bunch of facts. It is a convenience
+function. In other words, this:
+
+  @fact = qw(smc.edu caltech.edu pcc.edu);
+  $p->apl(@fact);
+
+  is completely equivalent to this:
+
+  @fact = qw(smc.edu caltech.edu pcc.edu);
+  $p->a($_) for @fact;
+
+=back
 
 =head1 TODO
 
