@@ -1,0 +1,132 @@
+John Sechrest wrote:
+
+>     Hello,
+>  
+>
+
+Hi John,
+
+>     Excuse me for the note. I have downloaded
+>     the AI::proplog package from CPAN.
+>
+>  
+>
+
+Wow, first feedback since uploading it!
+
+>     I am trying to understand how to make it work.
+>
+>     I have done:
+>
+>     perl Makefile.PL
+>     make
+>     make install
+>
+>     then I go into the t directory, which I assume are
+>     tests.
+>
+>     And I run:
+>
+>        perl bottom_up.t
+>
+>     and I get:
+>
+>     1..1
+>     ok 1
+>
+>
+>     I am not sure how to interpret this.  
+>
+
+it means the test was successful...
+
+>     I understand that I can assert statements:
+>
+>     $p->a( f1   => f2 );
+>
+>     which I think mean:
+>
+>     If f1 is true, then f2 is true
+>  
+>
+actually it is the exact opposite! It should be read as:
+
+  f1 is true only if f2 is true.... take this example:
+
+# cs requirements are basic cs, math, advanced cs, an engr rec and nat. sci.
+$p->a( cs_req => qw(basic_cs math_req advanced_cs engr_rec natural_science));
+
+note that cs_req is true only if all of the other propositions are true
+
+In fact, the docs do back me up in this case:
+
+a($then, @if)
+
+This function is used to model the human "if-then." It takes a list as
+its arguments. The first argument is the "then" and the remaining
+arguments are the "if", meaning the things which must be satisfied for
+the "then" to be true. Note: if there is no C<@if>, then C<$then> is
+true unconditionally. In other words, calling C<a> with one argument
+asserts that argument to be true.
+
+>     Here are my questions:
+>
+>     1) is the output above what you expect?
+>        Have I forgotten to do something?
+>        I have installed data::dumper as well. the same way.
+>  
+>
+
+WIth Perl 5.8.x, Data::Dumper comes standard with Perl. You shouldn't have to install it.
+
+>     2) I would like to make statements like:
+>
+>        admin (joe) = true
+>  
+>
+
+That is a predicate you are asserting. This is a *propositional* logic engine. Predicate logic is more expressive than propositional logic. The reference cited in the docs discusses the difference. I believe there is a Prolog interpreter on CPAN. Prolog is predicate logic and a bit beyond. Another option would be the Perl interface to CLIPS
+
+>        I assume that I can say this as
+>
+>     $p->a( admin(joe) );      
+>  
+>
+The way to do this is like this:
+
+# assert some facts about joe
+
+my $joe = new AI::Proplog;
+
+$joe->a ('admin');
+$joe->a('married');
+
+# assert some facts about bob
+
+my $bob = new AI::Proplog;
+
+$bob->a('programmer');
+$bob->a('single');
+
+
+
+>         However, I am not clear how to ask for all         of the admin(x) that are true.
+>  
+>
+you would just run through you predicates and check:
+
+my @people = ($bob, $joe);
+
+my @admin = grep { $_->top_down('admin') } @people;
+
+>         Nor is it clear how to print them out.
+>  
+>
+
+hmmm.... you can access the object but it doesn't have a name slot. You would need a container object for that .... so , basically, what is happening is that while I am giving you a makeshift solution, the best solution is to use a predicate logic engine instead of a propositional logic engine.
+
+>     Any help you can provide to point me in the right direction
+>     would be greatly appreciated.  
+>
+
+thanks for writing. you might like to join the perl-ai@perl.org mailing list and tell them what you want to do... they probably have a solution besides my offered ones.

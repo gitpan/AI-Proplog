@@ -10,7 +10,7 @@ our @ISA = qw(Exporter);
 
 our $debug = 0;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 
 

@@ -2,7 +2,9 @@ Changes
 MANIFEST
 Makefile.PL
 thoughts.pod
+email.txt
 lib/AI/Proplog.pm
 t/bottom_up.t
 t/top_down.t
 
+META.yml                                Module meta-data (added by MakeMaker)
